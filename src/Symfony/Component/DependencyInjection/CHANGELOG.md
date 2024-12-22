@@ -5,6 +5,8 @@ CHANGELOG
 ---
 
  * Make `#[AsTaggedItem]` repeatable
+ * Class attributes `#[AsMessage]` and `#[Entity]` are now automatically excluded as services injection, like `#[Exclude]` does
+ * Bundle creators can now use the `ContainerBuilder::registerAttributeForExclusion()` method for their custom Value Object's attributes
 
 7.2
 ---

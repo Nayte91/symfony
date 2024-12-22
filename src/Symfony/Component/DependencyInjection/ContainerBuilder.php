@@ -1446,6 +1446,18 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
         return $this->setAlias($type.' $'.$parsedName, $id);
     }
 
+    /** Registers attributes that will exclude classes from service loading
+     *
+     * @template T
+     *
+     * @param class-string<T>[] $attributes
+     */
+    public function registerAttributeForExclusion(array $attributes): void
+    {
+       //TODO: which key in definitions object?
+        $this->definitions['key-foo']->addTag('container.excluded', $attributes);
+    }
+
     /**
      * Returns an array of ChildDefinition[] keyed by interface.
      *

@@ -42,6 +42,8 @@ use Symfony\Component\DependencyInjection\Tests\Fixtures\PrototypeAsAlias\WithAs
 use Symfony\Component\DependencyInjection\Tests\Fixtures\PrototypeAsAlias\WithAsAliasInterface;
 use Symfony\Component\DependencyInjection\Tests\Fixtures\PrototypeAsAlias\WithAsAliasMultiple;
 use Symfony\Component\DependencyInjection\Tests\Fixtures\Utils\NotAService;
+use Symfony\Component\DependencyInjection\Tests\Fixtures\Utils\ObjectAsMessage;
+use Symfony\Component\Messenger\Attribute\AsMessage;
 
 class FileLoaderTest extends TestCase
 {
@@ -151,7 +153,7 @@ class FileLoaderTest extends TestCase
      * @testWith [true]
      *           [false]
      */
-    public function testRegisterClassesWithExcludeAttribute(bool $autoconfigure)
+    public function testRegisterClassesWithExcludedAttributes(bool $autoconfigure)
     {
         $container = new ContainerBuilder();
         $loader = new TestFileLoader($container, new FileLocator(self::$fixturesPath.'/Fixtures'));
@@ -163,6 +165,27 @@ class FileLoaderTest extends TestCase
         );
 
         $this->assertSame($autoconfigure, $container->getDefinition(NotAService::class)->hasTag('container.excluded'));
+    }
+
+    /**
+     * @testWith [true]
+     *           [false]
+     */
+    public function testRegisterAttributeAsExcluded(bool $autoconfigure)
+    {
+        $container = new ContainerBuilder();
+        $loader = new TestFileLoader($container, new FileLocator(self::$fixturesPath.'/Fixtures'));
+
+        //TODO: test logic
+        //$container->registerAttributeForExclusion([AsMessage::class]);
+
+        $loader->registerClasses(
+            (new Definition())->setAutoconfigured($autoconfigure),
+            'Symfony\Component\DependencyInjection\Tests\Fixtures\Utils\\',
+            'Utils/*',
+        );
+
+        $this->assertSame($autoconfigure, $container->getDefinition(ObjectAsMessage::class)->hasTag('container.excluded'));
     }
 
     public function testRegisterClassesWithExcludeAsArray()
