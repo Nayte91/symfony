@@ -40,7 +40,6 @@ use Symfony\Component\RateLimiter\LimiterInterface;
  * @author Samuel Roze <samuel.roze@gmail.com>
  * @author Tobias Schultze <http://tobion.de>
  *
- * @final
  */
 class Worker
 {
@@ -227,7 +226,7 @@ class Worker
                     'class' => $message::class,
                     'message_id' => $envelope->last(TransportMessageIdStamp::class)?->getId(),
                 ];
-                $this->logger->info('{class} was handled successfully (acknowledging to transport).', $context);
+                $this->logSuccessfullyHandledMessage($context);
             }
 
             unset($this->keepalives[$envelope->getMessage()]);
@@ -311,5 +310,10 @@ class Worker
     public function getMetadata(): WorkerMetadata
     {
         return $this->metadata;
+    }
+
+    protected function logSuccessfullyHandledMessage(array $context): void
+    {
+        $this->logger->info('{class} was handled successfully (acknowledging to transport).', $context);
     }
 }
